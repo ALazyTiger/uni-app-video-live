@@ -1,0 +1,32 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+        "titleNView":false
+      }
+		},
+    {
+      "path" : "components/tab-bar",
+      "style" : {}
+    }
+    ],
+  // "tabBar": { // 在pages.json中添加上tabBar配置，如下
+  //     "list": [
+  //         {"pagePath":"pages/index/index"},
+  //         {"pagePath":"pages/list/list"}
+  //         // ,{"pagePath":"pages/follow/follow"}
+  //         // {"pagePath":"pages/friend/friend"},
+  //         // {"pagePath":"pages/news/news"},
+  //         // {"pagePath":"pages/personal/personal"}
+  //     ]
+  // }, 
+	"globalStyle": {
+		"navigationBarTextStyle": "black",//导航栏标题颜色及状态栏前景颜色，仅支持 black/white
+		"navigationBarTitleText": "",//导航栏标题文字内容
+		"navigationBarBackgroundColor": "#F7F7F7",//导航栏背景颜色（同状态栏背景色）
+		"navigationStyle":"custom", // 设置头部导航栏为自定义模式，头部导航栏会自动消-(当navigationStyle设为custom或titleNView设为false时，原生导航栏不显示)
+		"backgroundColor": "#FFFFFF"//窗口的背景色	
+		// "enablePullDownRefresh":true//是否开启下拉刷新
+	}
+}

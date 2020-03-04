@@ -1,0 +1,150 @@
+<template>
+  <view class="content">
+    <index-header></index-header>
+    <!--首页头部导航栏组件-->
+    <view class="video-list">
+      <swiper class="swiper-box" style="flex: 1;height: 100%;" :vertical="true" :indicator-dots="false" :duration="200" :current="videoIndex" @change="handleSlider">
+        <swiper-item v-for="(item, index) in vlist" :key="index">
+          <view class="uni_vdplayer">
+            <video :id="'myVideo' + index" ref="players" class="player-video" :src="item.src" :controls="false" :loop="true" :show-center-play-btn="false" objectFit="fill">
+              <!-- :show-center-play-btn="false" 隐藏video播放按钮 -->
+            </video>
+            <!-- 中间播放按钮 -->
+            <view class="vd-cover flexbox" @click="handleClicked(index)"><text v-if="!isPlay" class="iconfont icon-bofang"></text></view>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+    <tab-bar></tab-bar>
+    <!--首页底部导航栏组件-->
+  </view>
+</template>
+<script>
+import TabBar from '../../components/tab-bar.vue';
+import IndexHeader from '../../components/index-header.vue';
+const videoJson = require('../../static/mock-video.js');
+let timer = null;
+export default {
+  components: {
+    'tab-bar': TabBar,
+    'index-header': IndexHeader
+  },
+  data() {
+    return {
+      videoIndex: 0,
+      vlist: videoJson,
+      isPlay: false, //当前视频是否播放中
+      clickNum: 0 //记录点击次数
+    };
+  },
+  onLoad() {
+    this.init();
+  },
+  methods: {
+    init() {
+      setTimeout(() => {
+        this.play(this.videoIndex);
+      }, 200);
+    },
+    handleSlider(e) {
+      // 滑动切换
+      // console.log(e)
+      let curIndex = e.detail.current;
+      if (curIndex === this.videoIndex + 1) {
+        console.log('向上滑动');
+        this.$refs.players[this.videoIndex + 1].play(); // 下一个开始播放并且从头开始播放
+        this.$refs.players[this.videoIndex].pause(); // 当前视频暂停播放
+      } else if (curIndex === this.videoIndex - 1) {
+        console.log('向下滑动');
+        this.$refs.players[this.videoIndex - 1].play(); // 上一个开始播放并且从头开始播放
+        this.$refs.players[this.videoIndex].pause(); // 当前视频暂停播放
+      }
+      this.videoIndex = curIndex;
+    },
+    play(index) {
+      // 播放
+      this.$refs.players[this.videoIndex].play();
+      this.isPlay = true;
+    },
+    // 暂停
+    pause(index) {
+      this.$refs.players[this.videoIndex].pause();
+      this.isPlay = false;
+    },
+    // 点击视频事件
+    handleClicked(index) {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      this.clickNum++;
+      timer = setTimeout(() => {
+        if (this.clickNum >= 2) {
+          console.log('双击视频');
+        } else {
+          console.log('单击视频');
+          if (this.isPlay) {
+            this.pause(index);
+          } else {
+            this.play(index);
+          }
+        }
+        this.clickNum = 0;
+      }, 300);
+    }
+  }
+};
+</script>
+
+<style>
+/* #ifndef APP-PLUS */
+page {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  display: -webkit-flex; /* Safari */
+}
+/* #endif */
+
+.content {
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #fff;
+  /* #ifdef MP-ALIPAY || MP-BAIDU */
+  height: 100vh;
+  /* #endif */
+}
+.video-list {
+  width: 750upx;
+  height: 100vh;
+  flex-direction: column;
+  flex: 1;
+  /* #ifndef APP-PLUS */
+  white-space: nowrap;
+  /* #endif */
+  /* #ifdef MP-ALIPAY || MP-BAIDU */
+  height: 100vh;
+  /* #endif */
+}
+
+.swiper-box {
+  flex-direction: column;
+  flex: 1;
+}
+.swiper-item {
+  flex-direction: column;
+  flex: 1;
+}
+.uni_vdplayer {
+  flex-direction: column;
+  flex: 1;
+ 
+}
+.player-video {
+  width: 750upx;
+  height: 100vh;
+  flex-direction: column;
+  flex: 1;
+
+}
+</style>
